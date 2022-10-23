@@ -1,9 +1,4 @@
-# Tic Tac Toe game with GUI
-# using tkinter
-
-# importing all necessary libraries
 import random
-import tkinter
 from tkinter import *
 from functools import partial
 from tkinter import messagebox
@@ -221,10 +216,8 @@ def play():
     wpc = partial(withpc, menu)
     wpl = partial(withplayer, menu)
 
-    head = Button(menu, text="---Welcome to tic-tac-toe---",
-                  activeforeground='red',
-                  activebackground="yellow", bg="red",
-                  fg="yellow", width=500, font='summer', bd=5)
+    head = Label(menu, text="Welcome to tic-tac-toe", bg="#237543",
+                 fg="white", width=500, font='monospace 30 bold', bd=4)
 
     B1 = Button(menu, text="Single Player", command=wpc,
                 activeforeground='red',

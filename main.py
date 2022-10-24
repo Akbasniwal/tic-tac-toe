@@ -13,9 +13,8 @@ sign = 0
 global board
 board = [[" " for x in range(3)] for y in range(3)]
 
+
 # check if match is over
-
-
 def winner(b, l):
     return ((b[0][0] == l and b[0][1] == l and b[0][2] == l) or
             (b[1][0] == l and b[1][1] == l and b[1][2] == l) or
@@ -26,21 +25,21 @@ def winner(b, l):
             (b[0][0] == l and b[1][1] == l and b[2][2] == l) or
             (b[0][2] == l and b[1][1] == l and b[2][0] == l))
 
+
 # Configure text on button while playing with another player
-
-
 def get_text(i, j, gb, l1, l2):
     global sign
     if board[i][j] == ' ':
         if sign % 2 == 0:
+            board[i][j] = "X"
+            button[i][j].config(text='X')
             l1.config(state=DISABLED)
             l2.config(state=ACTIVE)
-            board[i][j] = "X"
         else:
+            board[i][j] = "O"
+            button[i][j].config(text='O')
             l2.config(state=DISABLED)
             l1.config(state=ACTIVE)
-            board[i][j] = "O"
-        button[i][j].config(text=board[i][j])
         sign += 1
         playsound('sound/click.wav')
     if winner(board, "X"):
@@ -56,15 +55,13 @@ def get_text(i, j, gb, l1, l2):
         gb.destroy()
         box = messagebox.showinfo("Tie Game", "Tie Game")
 
+
 # Check if the player can push the button or not
-
-
 def isfree(i, j):
     return board[i][j] == " "
 
+
 # Check the board is full or not
-
-
 def isfull():
     flag = True
     for i in board:
@@ -72,9 +69,8 @@ def isfull():
             flag = False
     return flag
 
+
 # Create the GUI of game board for play along with another player
-
-
 def gameboard_pl(game_board, l1, l2):
     global button
     button = []
@@ -91,9 +87,8 @@ def gameboard_pl(game_board, l1, l2):
             button[i][j].grid(row=m, column=n)
     game_board.mainloop()
 
+
 # Decide the next move of system
-
-
 def pc():
     possiblemove = []
     for i in range(len(board)):
@@ -125,9 +120,8 @@ def pc():
             move = random.randint(0, len(edge)-1)
             return edge[move]
 
+
 # Configure text on button while playing with system
-
-
 def get_text_pc(i, j, gb, l1, l2):
     global sign
     if board[i][j] == ' ':
@@ -166,9 +160,8 @@ def get_text_pc(i, j, gb, l1, l2):
             button[move[0]][move[1]].config(state=DISABLED)
             get_text_pc(move[0], move[1], gb, l1, l2)
 
+
 # Create the GUI of game board for play along with system
-
-
 def gameboard_pc(game_board, l1, l2):
     global button
     button = []
@@ -185,40 +178,42 @@ def gameboard_pc(game_board, l1, l2):
             button[i][j].grid(row=m, column=n)
     game_board.mainloop()
 
+
 # Initialize the game board to play with system
-
-
 def withpc(game_board):
     game_board.destroy()
     game_board = Tk()
+    game_board.geometry("380x420+500+0")
     game_board.title("Tic Tac Toe")
-    l1 = Button(game_board, text="Player : X", width=10)
+    l1 = Button(game_board, text="Player 1 : X", width=12,
+                padx=5, pady=5, font="arial 12 bold")
+
     l1.grid(row=1, column=1)
     l2 = Button(game_board, text="Computer : O",
-                width=10, state=DISABLED)
+                width=12, state=DISABLED, padx=5, pady=5, font="arial 12 bold")
 
     l2.grid(row=2, column=1)
     gameboard_pc(game_board, l1, l2)
 
+
 # Initialize the game board to play with another player
-
-
 def withplayer(game_board):
     game_board.destroy()
     game_board = Tk()
+    game_board.geometry("380x420+500+0")
     game_board.title("Tic Tac Toe")
-    l1 = Button(game_board, text="Player 1 : X", width=10)
+    l1 = Button(game_board, text="Player 1 : X", width=12,
+                padx=5, pady=5, font="arial 12 bold")
 
     l1.grid(row=1, column=1)
     l2 = Button(game_board, text="Player 2 : O",
-                width=10, state=DISABLED)
+                width=12, state=DISABLED, padx=5, pady=5, font="arial 12 bold")
 
     l2.grid(row=2, column=1)
     gameboard_pl(game_board, l1, l2)
 
+
 # main function
-
-
 def play():
     root = Tk()
     root.geometry("500x500+500+0")
@@ -241,7 +236,7 @@ def play():
                 activebackground="#25a000", bg="#237543",
                 fg="white", width=500, bd=5, padx=10, pady=10, font="arial 15 bold")
 
-    B3 = Button(lf, text="Exit", command=exit, activeforeground='white',
+    B3 = Button(lf, text="Exit", command=root.quit, activeforeground='white',
                 activebackground="#25a000", bg="#237543",
                 fg="white", width=500, bd=5, padx=10, pady=10, font="arial 15 bold")
     head.pack(side='top')

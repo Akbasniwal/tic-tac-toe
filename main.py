@@ -1,4 +1,6 @@
 import random
+from time import sleep
+from playsound import playsound
 from tkinter import *
 from functools import partial
 from tkinter import messagebox
@@ -11,8 +13,7 @@ sign = 0
 global board
 board = [[" " for x in range(3)] for y in range(3)]
 
-# Check l(O/X) won the match or not
-# according to the rules of the game
+# check if match is over
 
 
 def winner(b, l):
@@ -39,15 +40,19 @@ def get_text(i, j, gb, l1, l2):
             l2.config(state=DISABLED)
             l1.config(state=ACTIVE)
             board[i][j] = "O"
-        sign += 1
         button[i][j].config(text=board[i][j])
+        sign += 1
+        playsound('sound/click.wav')
     if winner(board, "X"):
+        playsound('sound/success.wav')
         gb.destroy()
         box = messagebox.showinfo("Winner", "Player 1 won the match")
     elif winner(board, "O"):
+        playsound('sound/success.wav')
         gb.destroy()
         box = messagebox.showinfo("Winner", "Player 2 won the match")
     elif(isfull()):
+        playsound('sound/gameover.wav')
         gb.destroy()
         box = messagebox.showinfo("Tie Game", "Tie Game")
 
@@ -81,8 +86,8 @@ def gameboard_pl(game_board, l1, l2):
             n = j
             button[i].append(j)
             get_t = partial(get_text, i, j, game_board, l1, l2)
-            button[i][j] = Button(
-                game_board, bd=5, command=get_t, height=4, width=8)
+            button[i][j] = Button(game_board, bd=5, command=get_t, height=3, width=6, font="arial 20 bold",
+                                  bg="#237543", fg="white", activebackground="#237543", activeforeground="white")
             button[i][j].grid(row=m, column=n)
     game_board.mainloop()
 
@@ -135,18 +140,23 @@ def get_text_pc(i, j, gb, l1, l2):
             l2.config(state=DISABLED)
             l1.config(state=ACTIVE)
             board[i][j] = "O"
-        sign += 1
         button[i][j].config(text=board[i][j])
+        sign += 1
+        if sign % 2 == 1:
+            playsound('sound/click.wav')
     x = True
     if winner(board, "X"):
+        playsound('sound/success.wav')
         gb.destroy()
         x = False
         box = messagebox.showinfo("Winner", "Player won the match")
     elif winner(board, "O"):
+        playsound('sound/gameover.wav')
         gb.destroy()
         x = False
         box = messagebox.showinfo("Winner", "Computer won the match")
     elif(isfull()):
+        playsound('sound/gameover.wav')
         gb.destroy()
         x = False
         box = messagebox.showinfo("Tie Game", "Tie Game")
@@ -171,7 +181,7 @@ def gameboard_pc(game_board, l1, l2):
             button[i].append(j)
             get_t = partial(get_text_pc, i, j, game_board, l1, l2)
             button[i][j] = Button(
-                game_board, bd=5, command=get_t, height=4, width=8)
+                game_board, bd=5, command=get_t, height=3, width=6, font="arial 20 bold", bg="#237543", fg="white", activebackground="#237543", activeforeground="white")
             button[i][j].grid(row=m, column=n)
     game_board.mainloop()
 
@@ -210,32 +220,35 @@ def withplayer(game_board):
 
 
 def play():
-    menu = Tk()
-    menu.geometry("250x250")
-    menu.title("Tic Tac Toe")
-    wpc = partial(withpc, menu)
-    wpl = partial(withplayer, menu)
+    root = Tk()
+    root.geometry("500x500+500+0")
+    root.title("Tic Tac Toe")
+    wpc = partial(withpc, root)
+    wpl = partial(withplayer, root)
 
-    head = Label(menu, text="Welcome to tic-tac-toe", bg="#237543",
-                 fg="white", width=500, font='monospace 30 bold', bd=4)
+    head = Label(root, text="Welcome to tic-tac-toe", bg="#237543",
+                 fg="white", width=500, font='monospace 25 bold', bd=4)
+    lf = LabelFrame(root, text="Choose play mode", bd=2,
+                    relief=GROOVE, font="monospace 15 bold", padx=50, pady=20)
+    lf.place(x=10, y=70, height=420, width=475)
 
-    B1 = Button(menu, text="Single Player", command=wpc,
-                activeforeground='red',
-                activebackground="yellow", bg="red",
-                fg="yellow", width=500, font='summer', bd=5)
+    B1 = Button(lf, text="Single Player", command=wpc,
+                activeforeground='white',
+                activebackground="#25a000", bg="#237543",
+                fg="white", width=500, bd=5, padx=10, pady=10, font="arial 15 bold")
 
-    B2 = Button(menu, text="Multi Player", command=wpl, activeforeground='red',
-                activebackground="yellow", bg="red", fg="yellow",
-                width=500, font='summer', bd=5)
+    B2 = Button(lf, text="Multi Player", command=wpl, activeforeground='white',
+                activebackground="#25a000", bg="#237543",
+                fg="white", width=500, bd=5, padx=10, pady=10, font="arial 15 bold")
 
-    B3 = Button(menu, text="Exit", command=menu.quit, activeforeground='red',
-                activebackground="yellow", bg="red", fg="yellow",
-                width=500, font='summer', bd=5)
+    B3 = Button(lf, text="Exit", command=exit, activeforeground='white',
+                activebackground="#25a000", bg="#237543",
+                fg="white", width=500, bd=5, padx=10, pady=10, font="arial 15 bold")
     head.pack(side='top')
     B1.pack(side='top')
     B2.pack(side='top')
     B3.pack(side='top')
-    menu.mainloop()
+    root.mainloop()
 
 
 # Call main function
